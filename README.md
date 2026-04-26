@@ -2,7 +2,6 @@
 
 Every book. Every insight. One place. **NoteShelf** is a modern platform designed for readers to capture, share, and collaborate on book highlights, insights, and takeaways.
 
-![NoteShelf Landing Page](https://github.com/justShounak-07/Noteshelf/blob/main/public/next.svg) <!-- Note: Replace with actual hosted screenshot link if possible, or leave placeholder -->
 
 ## 🌟 Project Overview
 
@@ -33,10 +32,6 @@ NoteShelf is a collaborative library system that allows users to organize their 
 
 ## 📸 Screenshots
 
-| Landing Page | Library View | Book Details |
-| :--- | :--- | :--- |
-| ![Landing](https://raw.githubusercontent.com/justShounak-07/Noteshelf/main/public/next.svg) | ![Library](https://raw.githubusercontent.com/justShounak-07/Noteshelf/main/public/next.svg) | ![Details](https://raw.githubusercontent.com/justShounak-07/Noteshelf/main/public/next.svg) |
-*Screenshots are updated periodically.*
 
 ## 📂 Folder Structure
 

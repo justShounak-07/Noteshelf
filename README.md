@@ -54,36 +54,6 @@ Noteshelf/
 └── tsconfig.json       # TypeScript configuration
 ```
 
-## 🛠️ Getting Started
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/justShounak-07/Noteshelf.git
-   cd Noteshelf
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Set up Environment Variables**:
-   Create a `.env` file and add the following:
-   ```env
-   DATABASE_URL="your_postgresql_url"
-   AUTH_SECRET="your_secret"
-   GOOGLE_CLIENT_ID="your_id"
-   GOOGLE_CLIENT_SECRET="your_secret"
-   ```
-
-4. **Run the development server**:
-   ```bash
-   npm run dev
-   ```
-
-5. **Open the app**:
-   Visit [http://localhost:3000](http://localhost:3000).
-
 ## 📄 License
 
 This project is open-source and available under the [MIT License](LICENSE).

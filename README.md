@@ -33,6 +33,8 @@ NoteShelf is a collaborative library system that allows users to organize their 
 ## 📸 Screenshots
 
 ![Landing Page](https://raw.githubusercontent.com/justShounak-07/Noteshelf/main/public/landing.png)
+
+
 ## 📂 Folder Structure
 
 ```text

@@ -2,6 +2,9 @@
 
 Every book. Every insight. One place. **NoteShelf** is a modern platform designed for readers to capture, share, and collaborate on book Notes, highlights and takeaways.
 
+## Deployed Project Link
+https://note-shelf.vercel.app/
+
 
 ## 🌟 Project Overview
 
@@ -29,6 +32,7 @@ NoteShelf is a collaborative library system that allows users to organize their 
 - **Authentication**: [NextAuth.js v5](https://authjs.dev/)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Deployment**: [Vercel](https://vercel.com/)
+
 
 ## 📸 Screenshots
 

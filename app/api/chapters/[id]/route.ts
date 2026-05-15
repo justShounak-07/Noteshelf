@@ -8,27 +8,30 @@ export async function DELETE(
 ) {
   try {
     const session = await auth();
+
     const { id } = await params;
 
-    const highlight = await prisma.highlight.findUnique({
+    const chapter = await prisma.chapter.findUnique({
       where: { id },
       select: { createdById: true },
     });
 
-    if (!highlight) {
-      return NextResponse.json({ error: "Highlight not found" }, { status: 404 });
+    if (!chapter) {
+      return NextResponse.json({ error: "Chapter not found" }, { status: 404 });
     }
 
-    // Allow deletion if user created the highlight, or if it has no creator
-    if (highlight.createdById && highlight.createdById !== session?.user?.id) {
+    // Allow deletion if user created the chapter, or if chapter has no creator
+    if (chapter.createdById && chapter.createdById !== session?.user?.id) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    await prisma.highlight.delete({ where: { id } });
+    await prisma.chapter.delete({
+      where: { id },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting highlight:", error);
+    console.error("Error deleting chapter:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
@@ -42,37 +45,34 @@ export async function PUT(
     const { id } = await params;
     
     const body = await req.json();
-    const { content, pageNumber } = body;
+    const { title } = body;
 
-    if (!content?.trim()) {
-      return NextResponse.json({ error: "Content is required" }, { status: 400 });
+    if (!title?.trim()) {
+      return NextResponse.json({ error: "Title is required" }, { status: 400 });
     }
 
-    const highlight = await prisma.highlight.findUnique({
+    const chapter = await prisma.chapter.findUnique({
       where: { id },
       select: { createdById: true },
     });
 
-    if (!highlight) {
-      return NextResponse.json({ error: "Highlight not found" }, { status: 404 });
+    if (!chapter) {
+      return NextResponse.json({ error: "Chapter not found" }, { status: 404 });
     }
 
-    // Allow editing if user created the highlight, or if it has no creator
-    if (highlight.createdById && highlight.createdById !== session?.user?.id) {
+    // Allow editing if user created the chapter, or if chapter has no creator
+    if (chapter.createdById && chapter.createdById !== session?.user?.id) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const updated = await prisma.highlight.update({
+    const updated = await prisma.chapter.update({
       where: { id },
-      data: { 
-        content: content.trim(),
-        pageNumber: pageNumber ? String(pageNumber).trim() : null
-      },
+      data: { title: title.trim() },
     });
 
     return NextResponse.json(updated);
   } catch (error) {
-    console.error("Error updating highlight:", error);
+    console.error("Error updating chapter:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

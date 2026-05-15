@@ -96,7 +96,7 @@ export default function RegisterPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email address"
               required
-              className="w-full h-[42px] bg-transparent border border-border rounded-md px-3 text-text-primary placeholder-text-muted focus:border-[#5C8FFF] focus:outline-none transition-colors text-sm"
+              className="w-full h-[42px] bg-transparent border border-border rounded-md px-3 text-text-primary placeholder-text-muted focus:border-secondary focus:outline-none transition-colors text-sm"
             />
           </div>
           
@@ -107,7 +107,7 @@ export default function RegisterPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               required
-              className="w-full h-[42px] bg-transparent border border-border rounded-md px-3 text-text-primary placeholder-text-muted focus:border-[#5C8FFF] focus:outline-none transition-colors text-sm"
+              className="w-full h-[42px] bg-transparent border border-border rounded-md px-3 text-text-primary placeholder-text-muted focus:border-secondary focus:outline-none transition-colors text-sm"
             />
           </div>
 
@@ -118,16 +118,16 @@ export default function RegisterPage() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm Password"
               required
-              className="w-full h-[42px] bg-transparent border border-border rounded-md px-3 text-text-primary placeholder-text-muted focus:border-[#5C8FFF] focus:outline-none transition-colors text-sm"
+              className="w-full h-[42px] bg-transparent border border-border rounded-md px-3 text-text-primary placeholder-text-muted focus:border-secondary focus:outline-none transition-colors text-sm"
             />
           </div>
 
-          {error && <p className="text-[#FF5C5C] text-[13px] mt-1">{error}</p>}
+          {error && <p className="text-red-500 text-[13px] mt-1">{error}</p>}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-[42px] bg-[#E8C547] text-[#0F0F0F] font-semibold rounded-md mt-6 hover:brightness-105 transition-all focus:outline-none focus:ring-2 focus:ring-[#E8C547] focus:ring-offset-2 focus:ring-offset-surface disabled:opacity-70"
+            className="w-full h-[42px] bg-primary text-background font-semibold rounded-md mt-6 hover:brightness-105 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface disabled:opacity-70"
           >
             {loading ? "Creating account..." : "Create account"}
           </button>
@@ -135,7 +135,7 @@ export default function RegisterPage() {
 
         <div className="flex items-center gap-3 my-6">
           <div className="flex-1 h-px bg-border" />
-          <span className="text-text-muted text-xs">or continue with</span>
+          <span className="text-text-muted text-xs px-4">OR CONTINUE WITH</span>
           <div className="flex-1 h-px bg-border" />
         </div>
 
@@ -166,7 +166,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="mt-8 text-center">
-          <Link href="/auth/signin" className="text-[#5C8FFF] text-sm hover:underline">
+          <Link href="/auth/signin" className="text-secondary text-sm hover:underline">
             Already have an account? Sign in &rarr;
           </Link>
         </div>

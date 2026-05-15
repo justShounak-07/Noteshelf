@@ -52,6 +52,11 @@ export default function HighlightCard({
 }: HighlightCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [upvoteAnim, setUpvoteAnim] = useState(false);
+  
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(content);
+  const [editPageNumber, setEditPageNumber] = useState(pageNumber || "");
+  
   const queryClient = useQueryClient();
   const { color, label } = TYPE_CONFIG[type];
 
@@ -63,6 +68,22 @@ export default function HighlightCard({
       return res.json();
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["chapters", bookId] }),
+  });
+
+  const editMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`/api/highlights/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: editContent, pageNumber: editPageNumber }),
+      });
+      if (!res.ok) throw new Error("Failed to edit");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["chapters", bookId] });
+      setIsEditing(false);
+    },
   });
 
   // --- Upvote (optimistic) ---
@@ -115,8 +136,11 @@ export default function HighlightCard({
 
   return (
     <div
-      className="group relative px-6 py-5 bg-surface hover:bg-surface/80 transition-colors"
-      style={{ borderLeft: `3px solid ${color}` }}
+      className="group relative px-6 py-5 hover:brightness-105 transition-colors border-b border-border last:border-b-0"
+      style={{ 
+        borderLeft: `3px solid ${color}`,
+        backgroundColor: `${color}15` // 15 is hex for ~8% opacity
+      }}
     >
       {/* Own highlight badge */}
       {isOwn && (
@@ -145,11 +169,20 @@ export default function HighlightCard({
           <div className="absolute right-0 mt-1 w-28 bg-surface border border-border rounded-md shadow-xl z-20 overflow-hidden">
             <button
               onClick={() => {
+                setIsEditing(true);
+                setMenuOpen(false);
+              }}
+              className="w-full flex items-center gap-2 px-3 py-2 text-xs text-text-primary hover:bg-border transition-colors"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => {
                 if (confirm("Delete this highlight?")) deleteMutation.mutate();
                 setMenuOpen(false);
               }}
               disabled={deleteMutation.isPending}
-              className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-400 hover:bg-red-400/10 transition-colors"
+              className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-400 hover:bg-red-400/10 transition-colors border-t border-border"
             >
               <Trash2 className="w-3.5 h-3.5" />
               {deleteMutation.isPending ? "Deleting…" : "Delete"}
@@ -159,9 +192,59 @@ export default function HighlightCard({
       </div>
 
       {/* Content */}
-      <p className={`whitespace-pre-wrap text-text-primary leading-relaxed text-sm pr-8 mb-5 ${isOwn ? "mt-6" : ""}`}>
-        {content}
-      </p>
+      {isEditing ? (
+        <div className={`mt-2 mb-4 ${isOwn ? "pt-4" : ""}`}>
+          <textarea
+            value={editContent}
+            onChange={(e) => setEditContent(e.target.value)}
+            className="w-full bg-background border border-primary/30 rounded-md p-3 text-sm text-text-primary focus:outline-none focus:border-primary min-h-[100px] resize-y mb-3"
+            placeholder="Edit your highlight..."
+          />
+          <div className="flex items-center justify-between mb-2">
+            <div 
+              className={`flex items-center gap-2 px-2 py-1.5 rounded-md border transition-colors ${
+                editContent.trim() && !editPageNumber.trim() 
+                  ? "bg-red-500/5 border-red-500/30 ring-1 ring-red-500/50" 
+                  : "bg-background border-border"
+              }`}
+            >
+              <label className="text-xs text-text-muted font-medium flex items-center gap-0.5">
+                Page No. <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={editPageNumber}
+                onChange={(e) => setEditPageNumber(e.target.value)}
+                placeholder="e.g. 42"
+                className="w-16 bg-transparent text-text-primary text-xs focus:outline-none placeholder-text-muted/50 px-1"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  setIsEditing(false);
+                  setEditContent(content);
+                  setEditPageNumber(pageNumber || "");
+                }}
+                className="text-xs text-text-muted hover:text-text-primary transition-colors px-3 py-1.5"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => editMutation.mutate()}
+                disabled={editMutation.isPending || !editContent.trim() || !editPageNumber.trim()}
+                className="text-xs bg-primary text-background font-semibold px-4 py-1.5 rounded disabled:opacity-50 transition-colors hover:brightness-110"
+              >
+                {editMutation.isPending ? "Saving..." : "Save"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <p className={`whitespace-pre-wrap text-text-primary leading-relaxed text-sm pr-8 mb-5 ${isOwn ? "mt-6" : ""}`}>
+          {content}
+        </p>
+      )}
 
       {/* Bottom row: contributor + upvote */}
       <div className="flex items-center justify-between">

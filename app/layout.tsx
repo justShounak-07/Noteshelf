@@ -29,8 +29,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`} suppressHydrationWarning>
       <body className="antialiased min-h-screen flex flex-col relative" suppressHydrationWarning>
-        <NavBar />
         <Providers>
+          <NavBar />
           <main className="flex-1 relative z-10 flex flex-col">
             {children}
           </main>

@@ -64,7 +64,7 @@ export default function SignInPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email address"
               required
-              className={`w-full h-[42px] bg-transparent border ${error ? "border-[#FF5C5C]" : "border-border"} rounded-md px-3 text-text-primary placeholder-[#8A8680] focus:border-[#5C8FFF] focus:outline-none transition-colors text-sm`}
+              className={`w-full h-[42px] bg-transparent border ${error ? "border-red-500" : "border-border"} rounded-md px-3 text-text-primary placeholder-text-muted focus:border-secondary focus:outline-none transition-colors text-sm`}
             />
           </div>
           
@@ -75,7 +75,7 @@ export default function SignInPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               required
-              className={`w-full h-[42px] bg-transparent border ${error ? "border-[#FF5C5C]" : "border-border"} rounded-md pl-3 pr-10 text-text-primary placeholder-[#8A8680] focus:border-[#5C8FFF] focus:outline-none transition-colors text-sm`}
+              className={`w-full h-[42px] bg-transparent border ${error ? "border-red-500" : "border-border"} rounded-md pl-3 pr-10 text-text-primary placeholder-text-muted focus:border-secondary focus:outline-none transition-colors text-sm`}
             />
             <button
               type="button"
@@ -86,21 +86,21 @@ export default function SignInPage() {
             </button>
           </div>
 
-          {error && <p className="text-[#FF5C5C] text-[13px] mt-1">{error}</p>}
+          {error && <p className="text-red-500 text-[13px] mt-1">{error}</p>}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-[42px] bg-[#E8C547] text-[#0F0F0F] font-semibold rounded-md mt-6 hover:brightness-105 transition-all focus:outline-none focus:ring-2 focus:ring-[#E8C547] focus:ring-offset-2 focus:ring-offset-[#1A1A1A] disabled:opacity-70"
+            className="w-full h-[42px] bg-primary text-background font-semibold rounded-md mt-6 hover:brightness-105 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-surface disabled:opacity-70"
           >
             {loading ? "Signing in..." : "Sign in"}
           </button>
         </form>
 
         <div className="flex items-center gap-3 my-6">
-          <div className="flex-1 h-px bg-[#2A2A2A]" />
-          <span className="text-text-muted text-xs">or continue with</span>
-          <div className="flex-1 h-px bg-[#2A2A2A]" />
+          <div className="flex-1 h-px bg-border" />
+          <span className="text-text-muted text-xs px-4">OR CONTINUE WITH</span>
+          <div className="flex-1 h-px bg-border" />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -128,7 +128,7 @@ export default function SignInPage() {
         </div>
 
         <div className="mt-8 text-center">
-          <Link href="/auth/register" className="text-[#5C8FFF] text-sm hover:underline">
+          <Link href="/auth/register" className="text-secondary text-sm hover:underline">
             Don&apos;t have an account? Sign up &rarr;
           </Link>
         </div>

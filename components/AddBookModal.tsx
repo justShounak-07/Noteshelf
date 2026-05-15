@@ -13,13 +13,14 @@ export default function AddBookModal({ isOpen, onClose }: AddBookModalProps) {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
+  const [category, setCategory] = useState<"fiction" | "non-fiction" | "">("")
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
 
   const queryClient = useQueryClient();
 
   const createBookMutation = useMutation({
-    mutationFn: async (newBook: { title: string; author: string; coverImageUrl?: string; tags: string[] }) => {
+    mutationFn: async (newBook: { title: string; author: string; coverImageUrl?: string; tags: string[]; category?: string }) => {
       const res = await fetch("/api/books", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -35,6 +36,7 @@ export default function AddBookModal({ isOpen, onClose }: AddBookModalProps) {
       setTitle("");
       setAuthor("");
       setCoverImageUrl("");
+      setCategory("");
       setTags([]);
       setTagInput("");
     },
@@ -58,7 +60,7 @@ export default function AddBookModal({ isOpen, onClose }: AddBookModalProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !author.trim()) return;
-    createBookMutation.mutate({ title, author, coverImageUrl, tags });
+    createBookMutation.mutate({ title, author, coverImageUrl, tags, category: category || undefined });
   };
 
   if (!isOpen) return null;
@@ -95,7 +97,7 @@ export default function AddBookModal({ isOpen, onClose }: AddBookModalProps) {
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-[#141414] border border-border rounded-input px-3 py-2 text-text-primary placeholder-[#8A8680] focus:outline-none focus:border-secondary transition-colors"
+              className="w-full bg-background border border-border rounded-input px-3 py-2 text-text-primary placeholder-text-muted focus:outline-none focus:border-secondary transition-colors"
               placeholder="The Great Gatsby"
             />
           </div>
@@ -110,7 +112,7 @@ export default function AddBookModal({ isOpen, onClose }: AddBookModalProps) {
               required
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
-              className="w-full bg-[#141414] border border-border rounded-input px-3 py-2 text-text-primary placeholder-[#8A8680] focus:outline-none focus:border-secondary transition-colors"
+              className="w-full bg-background border border-border rounded-input px-3 py-2 text-text-primary placeholder-text-muted focus:outline-none focus:border-secondary transition-colors"
               placeholder="F. Scott Fitzgerald"
             />
           </div>
@@ -124,9 +126,39 @@ export default function AddBookModal({ isOpen, onClose }: AddBookModalProps) {
               type="url"
               value={coverImageUrl}
               onChange={(e) => setCoverImageUrl(e.target.value)}
-              className="w-full bg-[#141414] border border-border rounded-input px-3 py-2 text-text-primary placeholder-[#8A8680] focus:outline-none focus:border-secondary transition-colors"
+              className="w-full bg-background border border-border rounded-input px-3 py-2 text-text-primary placeholder-text-muted focus:outline-none focus:border-secondary transition-colors"
               placeholder="https://example.com/cover.jpg"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-text-muted mb-2">
+              Category
+            </label>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setCategory(category === "fiction" ? "" : "fiction")}
+                className={`flex-1 px-3 py-2 rounded-input text-sm font-medium border transition-colors ${
+                  category === "fiction"
+                    ? "bg-primary/15 border-primary text-primary"
+                    : "bg-transparent border-border text-text-muted hover:border-primary/40"
+                }`}
+              >
+                📖 Fiction
+              </button>
+              <button
+                type="button"
+                onClick={() => setCategory(category === "non-fiction" ? "" : "non-fiction")}
+                className={`flex-1 px-3 py-2 rounded-input text-sm font-medium border transition-colors ${
+                  category === "non-fiction"
+                    ? "bg-primary/15 border-primary text-primary"
+                    : "bg-transparent border-border text-text-muted hover:border-primary/40"
+                }`}
+              >
+                📚 Non-Fiction
+              </button>
+            </div>
           </div>
 
           <div>
@@ -151,7 +183,7 @@ export default function AddBookModal({ isOpen, onClose }: AddBookModalProps) {
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleAddTag}
-                className="flex-1 min-w-[120px] bg-transparent text-text-primary placeholder-[#8A8680] focus:outline-none text-sm py-1"
+                className="flex-1 min-w-[120px] bg-transparent text-text-primary placeholder-text-muted focus:outline-none text-sm py-1"
                 placeholder={tags.length === 0 ? "finance, habits..." : ""}
               />
             </div>

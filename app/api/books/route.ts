@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
 
 export async function GET(req: Request) {
   try {
@@ -7,30 +8,32 @@ export async function GET(req: Request) {
     const search = searchParams.get("search");
     const tag = searchParams.get("tag");
 
+    let whereClause: any = {};
+    if (search || tag) {
+      whereClause.AND = [];
+      if (search) {
+        whereClause.AND.push({
+          OR: [
+            { title: { contains: search } },
+            { author: { contains: search } },
+          ],
+        });
+      }
+      if (tag) {
+        whereClause.AND.push({
+          tags: {
+            some: {
+              tag: {
+                name: tag,
+              },
+            },
+          },
+        });
+      }
+    }
+
     const books = await prisma.book.findMany({
-      where: {
-        AND: [
-          search
-            ? {
-                OR: [
-                  { title: { contains: search } },
-                  { author: { contains: search } },
-                ],
-              }
-            : {},
-          tag
-            ? {
-                tags: {
-                  some: {
-                    tag: {
-                      name: tag,
-                    },
-                  },
-                },
-              }
-            : {},
-        ],
-      },
+      where: whereClause,
       include: {
         tags: {
           include: {
@@ -62,12 +65,13 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { title, author, coverImageUrl, tags } = body;
+    const { title, author, coverImageUrl, tags, category } = body;
 
     if (!title || !author) {
       return NextResponse.json({ error: "Title and author are required" }, { status: 400 });
     }
 
+    const session = await auth();
     const tagSlugs = Array.isArray(tags) ? tags.map((t: string) => t.toLowerCase().trim()) : [];
 
     const book = await prisma.book.create({
@@ -75,7 +79,8 @@ export async function POST(req: Request) {
         title,
         author,
         coverImageUrl: coverImageUrl || null,
-        // No createdById — open to all
+        category: category || null,
+        createdById: session?.user?.id || null,
         tags: {
           create: tagSlugs.map((slug) => ({
             tag: {

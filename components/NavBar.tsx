@@ -3,6 +3,7 @@ import { auth, signOut } from "@/auth";
 import { BookOpen } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import UserAvatar from "./UserAvatar";
+import SignOutButton from "./SignOutButton";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 export default async function NavBar() {
@@ -54,15 +55,8 @@ export default async function NavBar() {
                     </Link>
                   </DropdownMenu.Item>
                   <DropdownMenu.Separator className="h-px bg-border my-1" />
-                  <DropdownMenu.Item className="focus:outline-none cursor-pointer text-sm px-3 py-2 text-text-primary hover:bg-red-500/10 hover:text-[#FF5C5C] rounded transition-colors">
-                    <form action={async () => {
-                      "use server";
-                      await signOut({ redirectTo: "/" });
-                    }}>
-                      <button type="submit" className="w-full text-left">
-                        Sign out
-                      </button>
-                    </form>
+                  <DropdownMenu.Item className="focus:outline-none cursor-pointer text-sm px-3 py-2 text-text-primary hover:bg-red-500/10 hover:text-red-500 rounded transition-colors">
+                    <SignOutButton />
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>

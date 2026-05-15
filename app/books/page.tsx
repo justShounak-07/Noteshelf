@@ -11,6 +11,7 @@ interface Book {
   title: string;
   author: string;
   coverImageUrl: string | null;
+  category: string | null;
   tags: string[];
   highlightCount: number;
 }
@@ -60,7 +61,7 @@ export default function BooksPage() {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-primary text-[#0F0F0F] font-semibold px-6 py-2.5 rounded-input hover:brightness-110 transition-all flex-shrink-0"
+          className="bg-primary text-background font-semibold px-6 py-2.5 rounded-input hover:brightness-110 transition-all flex-shrink-0"
         >
           Add a Book
         </button>
@@ -69,13 +70,13 @@ export default function BooksPage() {
       {/* Search and Filters */}
       <div className="mb-8 space-y-4">
         <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8A8680]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search by title or author..."
-            className="w-full bg-[#141414] border border-border focus:border-secondary rounded-input pl-10 pr-4 py-2.5 text-text-primary placeholder-[#8A8680] focus:outline-none transition-colors"
+            className="w-full bg-surface border border-border focus:border-secondary rounded-input pl-10 pr-4 py-2.5 text-text-primary placeholder-text-muted focus:outline-none transition-colors"
           />
         </div>
 
@@ -119,7 +120,7 @@ export default function BooksPage() {
           {!debouncedSearch && !selectedTag && (
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-primary text-[#0F0F0F] font-semibold px-6 py-2 rounded-input hover:brightness-110 transition-all"
+              className="bg-primary text-background font-semibold px-6 py-2 rounded-input hover:brightness-110 transition-all"
             >
               Add a Book
             </button>
@@ -128,7 +129,7 @@ export default function BooksPage() {
             <div className="flex flex-col items-center gap-4">
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="bg-primary text-[#0F0F0F] font-semibold px-6 py-2 rounded-input hover:brightness-110 transition-all"
+                className="bg-primary text-background font-semibold px-6 py-2 rounded-input hover:brightness-110 transition-all"
               >
                 Add a Book
               </button>

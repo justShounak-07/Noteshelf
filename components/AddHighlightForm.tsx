@@ -57,7 +57,7 @@ export default function AddHighlightForm({ chapterId, bookId, onCancel }: AddHig
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!content.trim()) return;
+    if (!content.trim() || !pageNumber.trim()) return;
     mutation.mutate();
   };
 
@@ -98,15 +98,23 @@ export default function AddHighlightForm({ chapterId, bookId, onCancel }: AddHig
             )}
           </div>
           
-          <div className="flex items-center gap-2">
-            <label htmlFor="pageNumber" className="text-xs text-text-muted font-medium">Page No.</label>
+          <div 
+            className={`flex items-center gap-2 px-2 py-1.5 rounded-md border transition-colors ${
+              content.trim() && !pageNumber.trim() 
+                ? "bg-red-500/5 border-red-500/30 ring-1 ring-red-500/50" 
+                : "bg-background border-border"
+            }`}
+          >
+            <label htmlFor="pageNumber" className="text-xs text-text-muted font-medium flex items-center gap-0.5">
+              Page No. <span className="text-red-500">*</span>
+            </label>
             <input
               id="pageNumber"
               type="text"
               value={pageNumber}
               onChange={(e) => setPageNumber(e.target.value)}
               placeholder="e.g. 42"
-              className="w-16 bg-transparent border-b border-border text-text-primary text-xs focus:outline-none focus:border-primary px-1 py-0.5"
+              className="w-16 bg-transparent text-text-primary text-xs focus:outline-none placeholder-text-muted/50 px-1"
             />
           </div>
         </div>
@@ -122,7 +130,7 @@ export default function AddHighlightForm({ chapterId, bookId, onCancel }: AddHig
           </button>
           <button
             type="submit"
-            disabled={mutation.isPending || !content.trim()}
+            disabled={mutation.isPending || !content.trim() || !pageNumber.trim()}
             className="px-4 py-1.5 bg-primary text-background text-xs font-semibold rounded-[6px] hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             {mutation.isPending ? "Adding…" : "Add Highlight"}

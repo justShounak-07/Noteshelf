@@ -1,10 +1,12 @@
 "use client";
 
 import { use } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import { Book as BookIcon, ChevronLeft, Calendar, User as UserIcon, MessageSquare } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { Book as BookIcon, ChevronLeft, Calendar, User as UserIcon, MessageSquare, Trash2 } from "lucide-react";
 import ChapterList from "@/components/ChapterList";
 
 interface User {
@@ -36,6 +38,20 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
       const res = await fetch(`/api/books/${id}`);
       if (!res.ok) throw new Error("Failed to fetch book");
       return res.json();
+    },
+  });
+
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`/api/books/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete book");
+      return res.json();
+    },
+    onSuccess: () => {
+      router.push("/books");
     },
   });
 
@@ -81,18 +97,35 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
           ) : (
             <div className="w-full h-full bg-surface" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0F0F0F]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
         </div>
 
         {/* Header Content */}
         <div className="relative z-10 container max-w-6xl mx-auto px-4 pt-8 pb-12">
-          <Link 
-            href="/books" 
-            className="inline-flex items-center text-sm text-text-muted hover:text-primary transition-colors mb-8"
-          >
-            <ChevronLeft className="w-4 h-4 mr-1" />
-            Back to Library
-          </Link>
+          <div className="flex items-center justify-between mb-8">
+            <Link 
+              href="/books" 
+              className="inline-flex items-center text-sm text-text-muted hover:text-primary transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4 mr-1" />
+              Back to Library
+            </Link>
+
+            {session?.user?.id && book.createdBy?.id === session.user.id && (
+              <button
+                onClick={() => {
+                  if (confirm("Are you sure you want to delete this book? All chapters and highlights will be permanently removed.")) {
+                    deleteMutation.mutate();
+                  }
+                }}
+                disabled={deleteMutation.isPending}
+                className="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-400 transition-colors focus:outline-none"
+              >
+                <Trash2 className="w-4 h-4" />
+                {deleteMutation.isPending ? "Deleting..." : "Delete Book"}
+              </button>
+            )}
+          </div>
 
           <div className="flex flex-col md:flex-row gap-8 items-start">
             {/* Cover Image */}
@@ -133,7 +166,7 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
                 by {book.author}
               </p>
 
-              <div className="flex flex-wrap items-center gap-6 text-sm text-[#8A8680] mt-auto border-t border-border/50 pt-6">
+              <div className="flex flex-wrap items-center gap-6 text-sm text-text-muted mt-auto border-t border-border/50 pt-6">
                 <div className="flex items-center gap-2">
                   <UserIcon className="w-4 h-4" />
                   Added by <span className="text-text-primary">{book.createdBy?.name || 'Anonymous'}</span>

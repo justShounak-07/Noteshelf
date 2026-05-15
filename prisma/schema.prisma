@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -58,6 +58,7 @@ model Book {
   title         String
   author        String
   coverImageUrl String?
+  category      String?
   createdAt     DateTime    @default(now())
   createdById   String?
   createdBy     User?       @relation(fields: [createdById], references: [id], onDelete: SetNull)
